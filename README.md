@@ -1,1 +1,2 @@
-# flux
+# flux-configuration-playground
+Standalone Flux configuration

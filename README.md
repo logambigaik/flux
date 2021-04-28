@@ -26,7 +26,7 @@ Refer below link for installing flx
 # Practising with minikube  and python:
 
   Install minikbe
-  [minikube-setup] (https://github.com/logambigaik/minikube-setup.git)
+  [minikube-setup](https://github.com/logambigaik/minikube-setup.git)
   
 # After installing minikube, create namespace
 

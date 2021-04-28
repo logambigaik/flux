@@ -19,7 +19,7 @@ Flux is described as a GitOps operator for Kubernetes that synchronises the stat
 For example:
 ===========
 
-Refer below link for installing flx
+Refer below link for installing flux
 [Gitops-FluxCD](https://github.com/logambigaik/Gitops-FluxCD)
 
 
@@ -69,14 +69,14 @@ Refer below link for installing flx
 
 
 
-        fluxctl identity --k8s-fwd-ns flux
+        fluxctl identity --k8s-fwd-ns python-ns
         
   ![image](https://user-images.githubusercontent.com/54719289/116398609-e71fb700-a81f-11eb-8237-1659119f13c9.png)
 
 
   # to fix the above issue , install socat 
   
-          yum install -y socat
+          yum install -y socat && fluxctl identity --k8s-fwd-ns python-ns
           
   ![image](https://user-images.githubusercontent.com/54719289/116398716-04548580-a820-11eb-9f2f-1dd07e1175c9.png)
   
@@ -86,6 +86,55 @@ Refer below link for installing flx
   
   
   ![image](https://user-images.githubusercontent.com/54719289/116399478-e0457400-a820-11eb-8984-dfca3639158a.png)
+
+
+# Flux to sync the changes immediately
+
+  ![image](https://user-images.githubusercontent.com/54719289/116429250-9f0f8d00-a83d-11eb-8112-5f2fe93b2527.png)
+  
+
+# Create Kubernetes folder and create files deploy.yml ,service.yml and namespace.yml . WIthout running kubectl apply command,check the pods and svc for new namespace.
+
+  It automatically triggers in cluster.
+  
+![image](https://user-images.githubusercontent.com/54719289/116437100-fc5b0c80-a844-11eb-93b3-bc5803ffcf87.png)
+
+  IF we do any changes, it wont refelct immediately but can view the new file changes immediatley because  "--sync-garbage-collection" is not enabled. Hence,please update the args in flux pod using
+  
+      
+      kubectl edit deploy flux -n  python-ns
+      
+      
+-----------------------------------
+- args:
+  - --memcached-service=
+  - --sync-garbage-collection=true    
+-----------------------------------
+
+
+![image](https://user-images.githubusercontent.com/54719289/116437564-7a1f1800-a845-11eb-8b99-3f5fbcb25412.png)
+
+
+# Wait for Flux to start:
+
+      kubectl -n python-ns rollout status deployment/flux
+      
+      
+# Check if Flux deployment is successful or not:
+
+      kubectl get deploy -n python-ns
+      
+# sync the changes 
+
+    fluxctl sync --k8s-fwd-ns python-ns
+
+  ![image](https://user-images.githubusercontent.com/54719289/116439022-f5cd9480-a846-11eb-933b-8c29f1330263.png)
+
+# Check the service:
+
+      kubectl get svc -n demo
+
+![image](https://user-images.githubusercontent.com/54719289/116439445-75f3fa00-a847-11eb-9f80-d98f084d6354.png)
 
 
          
